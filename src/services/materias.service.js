@@ -1,5 +1,6 @@
 import * as materiasRepository from "../repositories/materias.repositorio.js";
 import { HttpError } from "../utils/http-error.js";
+<<<<<<< HEAD
 
 /**
  * Lista las materias de un usuario aplicando filtros y paginación.
@@ -10,6 +11,8 @@ import { HttpError } from "../utils/http-error.js";
  * @returns {Promise<{data: object[], meta: {page: number, limit: number, total: number, pages: number}}>}
  *   Lista de materias y metadatos de paginación.
  */
+=======
+>>>>>>> beae233a744cd909d52ec1bb58860408155235be
 export async function listMaterias(userId, filters) {
   const { materias, total } = await materiasRepository.findAllByUserId(userId, filters);
   return {
@@ -23,6 +26,7 @@ export async function listMaterias(userId, filters) {
   };
 }
 
+<<<<<<< HEAD
 /**
  * Busca una materia por id, verificando que pertenezca al usuario indicado.
  *
@@ -31,6 +35,8 @@ export async function listMaterias(userId, filters) {
  * @throws {HttpError} 404 si la materia no existe o no pertenece al usuario.
  * @returns {Promise<object>} La materia encontrada.
  */
+=======
+>>>>>>> beae233a744cd909d52ec1bb58860408155235be
 export async function getMateriaById(id, userId) {
 const materia = await materiasRepository.findByIdAndUserId(id, userId);
   if (!materia) {
@@ -39,6 +45,7 @@ const materia = await materiasRepository.findByIdAndUserId(id, userId);
   return materia;
 }
 
+<<<<<<< HEAD
 /**
  * Devuelve las tareas de una materia, verificando primero que la materia
  * exista y pertenezca al usuario indicado.
@@ -62,6 +69,10 @@ export async function getTareasByMateriaId(materiaId, userId) {
  * @throws {HttpError} 409 si ya existe una materia con el mismo código o nombre para ese usuario.
  * @returns {Promise<object>} La materia recién creada.
  */
+=======
+
+
+>>>>>>> beae233a744cd909d52ec1bb58860408155235be
 export async function createMateria(userId, materia) {
   await ensureUniqueFields(userId, materia);
   return materiasRepository.createMateria(userId, materia);
@@ -69,6 +80,7 @@ export async function createMateria(userId, materia) {
 
 
 
+<<<<<<< HEAD
 /**
  * Verifica que el código y el nombre de una materia sean únicos para el usuario dado.
  *
@@ -78,6 +90,8 @@ export async function createMateria(userId, materia) {
  * @throws {HttpError} 409 con código `DUPLICATE_CODE` o `DUPLICATE_NAME` si hay colisión.
  * @returns {Promise<void>}
  */
+=======
+>>>>>>> beae233a744cd909d52ec1bb58860408155235be
 async function ensureUniqueFields(userId, materia, excludeId) {
   if (materia.codigo) {
     const duplicatedCode = await materiasRepository.existsByCode(userId, materia.codigo, excludeId);
@@ -96,6 +110,7 @@ async function ensureUniqueFields(userId, materia, excludeId) {
   }
 }
 
+<<<<<<< HEAD
 /**
  * Reemplaza por completo los datos de una materia existente del usuario dado.
  *
@@ -106,12 +121,15 @@ async function ensureUniqueFields(userId, materia, excludeId) {
  *   nombre ya están en uso por otra materia del mismo usuario.
  * @returns {Promise<object>} La materia actualizada.
  */
+=======
+>>>>>>> beae233a744cd909d52ec1bb58860408155235be
 export async function replaceMateria(id, userId, materia) {
   await getMateriaById(id, userId);
   await ensureUniqueFields(userId, materia, id);
   return materiasRepository.updateMateria(id, userId, materia);
 }
 
+<<<<<<< HEAD
 /**
  * Actualiza parcialmente los datos de una materia existente del usuario dado.
  *
@@ -122,12 +140,15 @@ export async function replaceMateria(id, userId, materia) {
  *   nombre ya están en uso por otra materia del mismo usuario.
  * @returns {Promise<object>} La materia actualizada.
  */
+=======
+>>>>>>> beae233a744cd909d52ec1bb58860408155235be
 export async function updateMateria(id, userId, partialMateria) {
   await getMateriaById(id, userId);
   await ensureUniqueFields(userId, partialMateria, id);
   return materiasRepository.patchMateria(id, userId, partialMateria);
 }
 
+<<<<<<< HEAD
 /**
  * Elimina una materia existente del usuario dado.
  *
@@ -136,6 +157,8 @@ export async function updateMateria(id, userId, partialMateria) {
  * @throws {HttpError} 404 si la materia no existe o no pertenece al usuario.
  * @returns {Promise<void>}
  */
+=======
+>>>>>>> beae233a744cd909d52ec1bb58860408155235be
 export async function removeMateria(id, userId) {
   await getMateriaById(id, userId);
   await materiasRepository.deleteMateria(id, userId);

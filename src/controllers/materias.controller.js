@@ -9,6 +9,7 @@ import {
 } from "../validators/materias.validator.js";
 
 
+<<<<<<< HEAD
 /**
  * GET /api/v1/materias
  * Lista las materias del usuario autenticado, aplicando filtros, orden y paginación.
@@ -19,6 +20,8 @@ import {
  * @param {import("express").NextFunction} next - Callback para delegar errores al middleware de errores.
  * @returns {Promise<void>} Responde 200 con `{ success, data, meta }`, donde `meta` trae la info de paginación.
  */
+=======
+>>>>>>> beae233a744cd909d52ec1bb58860408155235be
 export async function listMaterias(request, response, next) {
   try {
     const filters = validateMateriaListQuery(request.query);
@@ -29,6 +32,7 @@ export async function listMaterias(request, response, next) {
   }
 }
 
+<<<<<<< HEAD
 /**
  * GET /api/v1/materias/:id
  * Obtiene el detalle de una materia puntual, siempre que pertenezca al usuario autenticado.
@@ -39,6 +43,8 @@ export async function listMaterias(request, response, next) {
  * @param {import("express").NextFunction} next - Callback para delegar errores al middleware de errores.
  * @returns {Promise<void>} Responde 200 con `{ success, data }` o 404 si la materia no existe o no es del usuario.
  */
+=======
+>>>>>>> beae233a744cd909d52ec1bb58860408155235be
 export async function getMaterias(request, response, next){
   try{
     const  id  = validateMateriaId(request.params.id);
@@ -49,6 +55,7 @@ export async function getMaterias(request, response, next){
   }
 }
 
+<<<<<<< HEAD
 /**
  * GET /api/v1/materias/:id/tareas
  * Devuelve las tareas asociadas a una materia puntual del usuario autenticado.
@@ -86,6 +93,9 @@ export async function getTareasByMateria(request, response, next) {
  * @returns {Promise<void>} Responde 201 con `{ success, data }` (la materia creada) o error 409
  *   si el código o el nombre ya existen para ese usuario.
  */
+=======
+
+>>>>>>> beae233a744cd909d52ec1bb58860408155235be
 export async function createMateria(request, response, next) {
   try {
     const payload = validateCreateMateria(request.body);
@@ -97,6 +107,7 @@ export async function createMateria(request, response, next) {
 }
 
 
+<<<<<<< HEAD
 /**
  * PUT /api/v1/materias/:id
  * Reemplaza por completo una materia existente del usuario autenticado.
@@ -108,6 +119,8 @@ export async function createMateria(request, response, next) {
  * @returns {Promise<void>} Responde 200 con `{ success, data }` (la materia actualizada), 404 si no
  *   existe o no es del usuario, o 409 si el código o el nombre chocan con otra materia.
  */
+=======
+>>>>>>> beae233a744cd909d52ec1bb58860408155235be
 export async function replaceMateria(request, response, next) {
   try {
     const id = validateMateriaId(request.params.id);
@@ -119,6 +132,7 @@ export async function replaceMateria(request, response, next) {
   }
 }
 
+<<<<<<< HEAD
 /**
  * PATCH /api/v1/materias/:id
  * Actualiza parcialmente una materia existente del usuario autenticado.
@@ -130,6 +144,8 @@ export async function replaceMateria(request, response, next) {
  * @returns {Promise<void>} Responde 200 con `{ success, data }` (la materia actualizada), 404 si no
  *   existe o no es del usuario, o 409 si el código o el nombre chocan con otra materia.
  */
+=======
+>>>>>>> beae233a744cd909d52ec1bb58860408155235be
 export async function updateMateria(request, response, next) {
   try {
     const id = validateMateriaId(request.params.id);
@@ -141,6 +157,7 @@ export async function updateMateria(request, response, next) {
   }
 }
 
+<<<<<<< HEAD
 /**
  * DELETE /api/v1/materias/:id
  * Elimina una materia existente del usuario autenticado.
@@ -151,6 +168,8 @@ export async function updateMateria(request, response, next) {
  * @param {import("express").NextFunction} next - Callback para delegar errores al middleware de errores.
  * @returns {Promise<void>} Responde 204 sin contenido, o 404 si la materia no existe o no es del usuario.
  */
+=======
+>>>>>>> beae233a744cd909d52ec1bb58860408155235be
 export async function deleteMateria(request, response, next) {
   try {
     const id = validateMateriaId(request.params.id);
