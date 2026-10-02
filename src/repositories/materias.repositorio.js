@@ -9,7 +9,6 @@ const sortableFields = {
     createdAt: "m.created_at",
     updatedAt: "m.updated_at"
 };
-<<<<<<< HEAD
 /**
  * Traduce un par (sort, order) recibido por query string a una cláusula ORDER BY segura.
  * Si `sort` no es una columna permitida, se ordena por nombre.
@@ -18,23 +17,18 @@ const sortableFields = {
  * @param {string} order - Dirección solicitada ("asc" o "desc").
  * @returns {string} Fragmento SQL listo para usar después de `ORDER BY`.
  */
-=======
->>>>>>> beae233a744cd909d52ec1bb58860408155235be
 function normalizeSort(sort, order) {
     const column = sortableFields[sort] || sortableFields.nombre;
     const direction = String(order).toLocaleLowerCase() === "desc" ? "DESC" : "ASC";
 
     return `${column} ${direction}`;
 }
-<<<<<<< HEAD
 /**
  * Mapea una fila cruda de la tabla `materia` al objeto materia que expone la API.
  *
  * @param {object} row - Fila devuelta por MySQL para la tabla `materia`.
  * @returns {object} Materia con nombres de campo en camelCase.
  */
-=======
->>>>>>> beae233a744cd909d52ec1bb58860408155235be
 function mapMateriaRow(row) {
     return {
         id: row.id ?? row.id_materia,
@@ -47,7 +41,6 @@ function mapMateriaRow(row) {
         updatedAt: row.updated_at
     };
 }
-<<<<<<< HEAD
 
 /**
  * Mapea una fila cruda de la tabla `tarea` al objeto tarea que expone la API.
@@ -73,6 +66,32 @@ function mapTareaRow(row) {
 }
 
 /**
+ * Mapea una fila cruda de la tabla `evento` al objeto evento que expone la API.
+ *
+ * Nota: se asume un esquema de tabla `evento` con columnas
+ * `id_evento, id_materia, titulo, descripcion, fecha_inicio, fecha_fin, ubicacion, tipo,
+ * created_at, updated_at`. Ajusta esta función (y la consulta de `findEventosByMateriaId`)
+ * si tu esquema real difiere.
+ *
+ * @param {object} row - Fila devuelta por MySQL para la tabla `evento`.
+ * @returns {object} Evento con nombres de campo en camelCase.
+ */
+function mapEventoRow(row) {
+    return {
+        id: row.id ?? row.id_evento,
+        materiaId: row.materiaId ?? row.id_materia,
+        titulo: row.titulo,
+        descripcion: row.descripcion,
+        fechaInicio: row.fecha_inicio,
+        fechaFin: row.fecha_fin,
+        ubicacion: row.ubicacion,
+        tipo: row.tipo,
+        createdAt: row.created_at,
+        updatedAt: row.updated_at
+    };
+}
+
+/**
  * Busca las materias de un usuario aplicando filtros, orden y paginación, y calcula el total
  * de resultados (sin paginar) para armar la metadata de paginación.
  *
@@ -81,8 +100,6 @@ function mapTareaRow(row) {
  *   - Filtros ya validados.
  * @returns {Promise<{materias: object[], total: number}>} Materias de la página solicitada y el total general.
  */
-=======
->>>>>>> beae233a744cd909d52ec1bb58860408155235be
 export async function findAllByUserId(userId, filters = {}) {
   const conditions = ["m.id_usuario = ?"];
   const params = [userId];
@@ -101,8 +118,10 @@ export async function findAllByUserId(userId, filters = {}) {
     params
   );
   const orderBy = normalizeSort(filters.sort, filters.order);
-  const limit = filters.limit;
-  const offset = (filters.page - 1) * limit;
+  // limit y page ya vienen validados como enteros (validateMateriaListQuery), por eso
+  // se interpolan: algunas versiones de MySQL rechazan LIMIT ? en sentencias preparadas.
+  const limit = Number(filters.limit);
+  const offset = (Number(filters.page) - 1) * limit;
   const [rows] = await pool.execute(
     `SELECT
        m.id_materia AS id,
@@ -112,11 +131,13 @@ export async function findAllByUserId(userId, filters = {}) {
        m.color,
        m.creditos,
        m.activa,
-       m.created_at AS createdAt,
-       m.updated_at AS updatedAt
+       m.created_at,
+       m.updated_at
      FROM materia m
-     WHERE m.id_materia = ? AND m.id_usuario = ?`,
-     [id, userId]
+     WHERE ${conditions.join(" AND ")}
+     ORDER BY ${orderBy}
+     LIMIT ${limit} OFFSET ${offset}`,
+    params
   );
   return {
     materias: rows.map(mapMateriaRow),
@@ -124,7 +145,6 @@ export async function findAllByUserId(userId, filters = {}) {
   };
 }
 
-<<<<<<< HEAD
 /**
  * Busca una materia puntual por id, verificando que pertenezca al usuario indicado.
  *
@@ -132,8 +152,6 @@ export async function findAllByUserId(userId, filters = {}) {
  * @param {number} userId - Id del usuario dueño de la materia (siempre se pasa el USERID).
  * @returns {Promise<object|null>} La materia mapeada, o `null` si no existe o no es del usuario.
  */
-=======
->>>>>>> beae233a744cd909d52ec1bb58860408155235be
 export async function findByIdAndUserId(id, userId) {
   const [rows] = await pool.execute(
     `SELECT
@@ -155,7 +173,6 @@ export async function findByIdAndUserId(id, userId) {
 }
 
 
-<<<<<<< HEAD
 /**
  * Verifica si ya existe una materia con el código dado para un usuario.
  *
@@ -164,8 +181,6 @@ export async function findByIdAndUserId(id, userId) {
  * @param {number} [excludeId] - Id de materia a excluir de la búsqueda (útil al actualizar).
  * @returns {Promise<boolean>} `true` si ya existe otra materia con ese código.
  */
-=======
->>>>>>> beae233a744cd909d52ec1bb58860408155235be
 export async function existsByCode(userId, codigo, excludeId) {
   const params = [userId, codigo];
   let sql = "SELECT 1 FROM materia WHERE id_usuario = ? AND codigo = ?";
@@ -181,7 +196,6 @@ export async function existsByCode(userId, codigo, excludeId) {
   return rows.length > 0;
 }
 
-<<<<<<< HEAD
 /**
  * Verifica si ya existe una materia con el nombre dado para un usuario.
  *
@@ -190,8 +204,6 @@ export async function existsByCode(userId, codigo, excludeId) {
  * @param {number} [excludeId] - Id de materia a excluir de la búsqueda (útil al actualizar).
  * @returns {Promise<boolean>} `true` si ya existe otra materia con ese nombre.
  */
-=======
->>>>>>> beae233a744cd909d52ec1bb58860408155235be
 export async function existsByName(userId, nombre, excludeId) {
   const params = [userId, nombre];
   let sql = "SELECT 1 FROM materia WHERE id_usuario = ? AND nombre = ?";
@@ -208,7 +220,6 @@ export async function existsByName(userId, nombre, excludeId) {
 }
        
 
-<<<<<<< HEAD
 /**
  * Inserta una nueva materia para un usuario y devuelve el registro creado.
  *
@@ -217,8 +228,6 @@ export async function existsByName(userId, nombre, excludeId) {
  *   - Datos de la materia a crear.
  * @returns {Promise<object>} La materia recién creada, ya mapeada.
  */
-=======
->>>>>>> beae233a744cd909d52ec1bb58860408155235be
 export async function createMateria(userId, materia) {
   const [result] = await pool.execute(
     `INSERT INTO materia (id_usuario, nombre, codigo, color, creditos, activa)
@@ -236,7 +245,6 @@ export async function createMateria(userId, materia) {
   return findByIdAndUserId(result.insertId, userId);
 }
 
-<<<<<<< HEAD
 /**
  * Actualiza parcialmente los campos provistos de una materia del usuario dado.
  * Si no se envía ningún campo, simplemente devuelve la materia sin modificarla.
@@ -246,8 +254,6 @@ export async function createMateria(userId, materia) {
  * @param {object} partialMateria - Campos a modificar (nombre, codigo, color, creditos, activa), parcial.
  * @returns {Promise<object|null>} La materia actualizada, ya mapeada.
  */
-=======
->>>>>>> beae233a744cd909d52ec1bb58860408155235be
 export async function patchMateria(id, userId, partialMateria) {
   const fields = [];
   const params = [];
@@ -294,7 +300,6 @@ export async function patchMateria(id, userId, partialMateria) {
 }
 
 
-<<<<<<< HEAD
 /**
  * Elimina una materia de un usuario dado.
  *
@@ -302,8 +307,6 @@ export async function patchMateria(id, userId, partialMateria) {
  * @param {number} userId - Id del usuario dueño de la materia (siempre se pasa el USERID).
  * @returns {Promise<boolean>} `true` si se eliminó una fila, `false` si no existía.
  */
-=======
->>>>>>> beae233a744cd909d52ec1bb58860408155235be
 export async function deleteMateria(id, userId) {
   const [result] = await pool.execute(
     "DELETE FROM materia WHERE id_materia = ? AND id_usuario = ?",
@@ -313,7 +316,6 @@ export async function deleteMateria(id, userId) {
   return result.affectedRows > 0;
 }
 
-<<<<<<< HEAD
 /**
  * Busca las tareas asociadas a una materia, verificando en el mismo JOIN que la materia
  * pertenezca al usuario indicado (defensa adicional: la capa de servicio ya valida esto
@@ -349,5 +351,39 @@ export async function findTareasByMateriaId(materiaId, userId) {
   return rows.map(mapTareaRow);
 }
 
-=======
->>>>>>> beae233a744cd909d52ec1bb58860408155235be
+/**
+ * Busca los eventos asociados a una materia, verificando en el mismo JOIN que la materia
+ * pertenezca al usuario indicado (la capa de servicio ya valida esto antes de llamar aquí,
+ * pero el filtro por `id_usuario` evita filtrar eventos de una materia ajena si esta
+ * función se reutiliza en otro lugar).
+ *
+ * Nota: se asume un esquema de tabla `evento` con columnas
+ * `id_evento, id_materia, titulo, descripcion, fecha_inicio, fecha_fin, ubicacion, tipo,
+ * created_at, updated_at`. Ajusta la consulta si tu esquema real usa otros nombres de columna.
+ *
+ * @param {number} materiaId - Id de la materia cuyos eventos se quieren consultar.
+ * @param {number} userId - Id del usuario dueño de la materia (siempre se pasa el USERID).
+ * @returns {Promise<object[]>} Eventos de la materia, ya mapeados, ordenados por fecha de inicio.
+ */
+export async function findEventosByMateriaId(materiaId, userId) {
+  const [rows] = await pool.execute(
+    `SELECT
+       e.id_evento AS id,
+       e.id_materia AS materiaId,
+       e.titulo,
+       e.descripcion,
+       e.fecha_inicio,
+       e.fecha_fin,
+       e.ubicacion,
+       e.tipo,
+       e.created_at,
+       e.updated_at
+     FROM evento e
+     INNER JOIN materia m ON m.id_materia = e.id_materia
+     WHERE e.id_materia = ? AND m.id_usuario = ?
+     ORDER BY e.fecha_inicio ASC`,
+    [materiaId, userId]
+  );
+
+  return rows.map(mapEventoRow);
+}

@@ -1,6 +1,5 @@
 import { HttpError } from "../utils/http-error.js";
 
-<<<<<<< HEAD
 /**
  * Convierte un valor recibido (típicamente de query string) a booleano estricto.
  *
@@ -8,8 +7,6 @@ import { HttpError } from "../utils/http-error.js";
  * @throws {HttpError} 422 si el valor no es `undefined`, `true`/`"true"` ni `false`/`"false"`.
  * @returns {boolean|undefined} El booleano convertido, o `undefined` si `value` era `undefined`.
  */
-=======
->>>>>>> beae233a744cd909d52ec1bb58860408155235be
 function parseBoolean(value) {
   if (value === undefined) {
     return undefined;
@@ -32,7 +29,6 @@ function parseBoolean(value) {
   throw new HttpError(422, "VALIDATION_ERROR", "El filtro 'activa' debe ser true o false.");
 }
 
-<<<<<<< HEAD
 /**
  * Valida y convierte un valor a entero mayor o igual a cero.
  *
@@ -41,8 +37,6 @@ function parseBoolean(value) {
  * @throws {HttpError} 422 si el valor no es un entero mayor o igual a cero.
  * @returns {number|null} El entero convertido, o `null` si no se envió valor.
  */
-=======
->>>>>>> beae233a744cd909d52ec1bb58860408155235be
 function parsePositiveInteger(value, fieldName) {
   if (value === undefined || value === null || value === "") {
     return null;
@@ -57,7 +51,6 @@ function parsePositiveInteger(value, fieldName) {
   return parsed;
 }
 
-<<<<<<< HEAD
 /**
  * Valida que un valor sea un string no vacío y le quita espacios en los extremos.
  *
@@ -66,8 +59,6 @@ function parsePositiveInteger(value, fieldName) {
  * @throws {HttpError} 422 si el valor no es un string o queda vacío tras el trim.
  * @returns {string} El string ya limpio.
  */
-=======
->>>>>>> beae233a744cd909d52ec1bb58860408155235be
 function normalizeString(value, fieldName) {
   if (typeof value !== "string" || value.trim() === "") {
     throw new HttpError(422, "VALIDATION_ERROR", `El campo '${fieldName}' es obligatorio.`);
@@ -76,7 +67,6 @@ function normalizeString(value, fieldName) {
   return value.trim();
 }
 
-<<<<<<< HEAD
 /**
  * Valida que un color venga en formato hexadecimal `#RRGGBB`.
  *
@@ -84,15 +74,12 @@ function normalizeString(value, fieldName) {
  * @throws {HttpError} 422 si el formato no coincide con `#RRGGBB`.
  * @returns {void}
  */
-=======
->>>>>>> beae233a744cd909d52ec1bb58860408155235be
 function validateColor(color) {
   if (!/^#[0-9A-Fa-f]{6}$/.test(color)) {
     throw new HttpError(422, "VALIDATION_ERROR", "El campo 'color' debe tener formato hexadecimal #RRGGBB.");
   }
 }
 
-<<<<<<< HEAD
 /**
  * Valida y normaliza los parámetros de query string para listar materias.
  *
@@ -101,8 +88,6 @@ function validateColor(color) {
  * @returns {{activa: boolean|undefined, search: string, sort: string, order: string, page: number, limit: number}}
  *   Filtros ya validados y listos para pasar a la capa de servicio/repositorio.
  */
-=======
->>>>>>> beae233a744cd909d52ec1bb58860408155235be
 export function validateMateriaListQuery(query) {
   const page = Number(query.page ?? 1);
   const limit = Number(query.limit ?? 20);
@@ -125,7 +110,6 @@ export function validateMateriaListQuery(query) {
   };
 }
 
-<<<<<<< HEAD
 /**
  * Valida que un id de materia (recibido como `request.params.id`, típicamente string) sea
  * un entero positivo. También se reutiliza para validar el `:id` del endpoint de tareas
@@ -135,8 +119,6 @@ export function validateMateriaListQuery(query) {
  * @throws {HttpError} 400 si no es un entero mayor o igual a 1.
  * @returns {number} El id ya convertido a número.
  */
-=======
->>>>>>> beae233a744cd909d52ec1bb58860408155235be
 export function validateMateriaId(id) {
   const parsedId = Number(id);
 
@@ -147,7 +129,6 @@ export function validateMateriaId(id) {
   return parsedId;
 }
 
-<<<<<<< HEAD
 /**
  * Valida el cuerpo de la petición para crear (o reemplazar) una materia.
  *
@@ -156,8 +137,6 @@ export function validateMateriaId(id) {
  * @returns {{nombre: string, codigo: string, color: string, creditos: number|null, activa: boolean}}
  *   Datos de la materia ya validados y normalizados.
  */
-=======
->>>>>>> beae233a744cd909d52ec1bb58860408155235be
 export function validateCreateMateria(body) {
   const nombre = normalizeString(body.nombre, "nombre");
   const codigo = normalizeString(body.codigo, "codigo");
@@ -176,7 +155,6 @@ export function validateCreateMateria(body) {
   };
 }
 
-<<<<<<< HEAD
 /**
  * Valida el cuerpo de la petición para actualizar parcialmente una materia.
  * Solo incluye en el resultado los campos que realmente vinieron en el body.
@@ -185,8 +163,6 @@ export function validateCreateMateria(body) {
  * @throws {HttpError} 422 si no se envía ningún campo válido, o si algún campo enviado es inválido.
  * @returns {object} Objeto parcial con los campos a actualizar, ya validados.
  */
-=======
->>>>>>> beae233a744cd909d52ec1bb58860408155235be
 export function validatePatchMateria(body) {
   const payload = {};
 
