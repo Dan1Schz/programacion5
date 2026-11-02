@@ -1,0 +1,84 @@
+/* ---------- Base ---------- */
+* { box-sizing: border-box; }
+
+:root {
+    --acento: #2563eb;
+    --acento-suave: #eff4ff;
+    --texto: #1f2937;
+    --borde: #e5e7eb;
+    --fondo: #f3f4f6;
+}
+
+/* Color de acento por página */
+.tema-ciudades  { --acento: #2563eb; --acento-suave: #eff4ff; }
+.tema-clientes  { --acento: #059669; --acento-suave: #ecfdf5; }
+.tema-oficinas  { --acento: #d97706; --acento-suave: #fffbeb; }
+.tema-proyectos { --acento: #7c3aed; --acento-suave: #f5f3ff; }
+
+body {
+    margin: 0;
+    padding: 2rem 1rem;
+    font-family: 'Segoe UI', Roboto, Arial, sans-serif;
+    color: var(--texto);
+    background: var(--fondo);
+}
+
+.contenedor {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
+h1 {
+    margin: 0 0 1rem;
+    font-size: 1.75rem;
+    padding-left: 0.75rem;
+    border-left: 5px solid var(--acento);
+}
+
+/* ---------- Tabla ---------- */
+.tabla-wrap {
+    overflow-x: auto;               /* scroll horizontal en pantallas pequeñas */
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.95rem;
+}
+
+thead th {
+    background: var(--acento);
+    color: #fff;
+    text-align: left;
+    font-weight: 600;
+    padding: 12px 16px;
+    white-space: nowrap;
+}
+
+tbody td {
+    padding: 10px 16px;
+    border-bottom: 1px solid var(--borde);
+}
+
+tbody tr:nth-child(even) { background: #fafafa; }
+tbody tr:hover           { background: var(--acento-suave); }
+tbody tr:last-child td   { border-bottom: none; }
+
+/* Mensajes "No existen filas" / "Error al cargar" */
+td[colspan] {
+    text-align: center;
+    color: #6b7280;
+    padding: 2rem 1rem;
+    font-style: italic;
+}
+
+/* Primera columna (Id) más angosta */
+tbody td:first-child,
+thead th:first-child {
+    width: 70px;
+    color: #6b7280;
+}
+thead th:first-child { color: #fff; }
