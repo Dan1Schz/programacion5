@@ -10,14 +10,10 @@ import projectRouter from './routes/proyectos.routes.js';
 
 const app = express();
 const frontDirectory = fileURLToPath(new URL('../../front', import.meta.url));
-const initialFrontDirectory = fileURLToPath(
-  new URL('../../frontInicial', import.meta.url),
-);
 
 app.disable('x-powered-by');
 app.use(express.json({ limit: '16kb' }));
 app.use(express.static(frontDirectory));
-app.use('/inicial', express.static(initialFrontDirectory));
 
 app.use('/api/v1/health', healthRouter);
 app.use('/api/v1/ciudades', cityRouter);

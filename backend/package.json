@@ -9,7 +9,7 @@
     "dev": "node --watch src/server.js",
     "start": "node src/server.js",
     "check": "node scripts/check-syntax.js",
-    "test": "node --test --test-concurrency=1 test/ciudades.integration.test.js test/recursos.integration.test.js"
+    "test": "node --test --test-concurrency=1 test/proyectos.fechas.test.js test/ciudades.integration.test.js test/recursos.integration.test.js"
   },
   "engines": {
     "node": ">=20"

@@ -12,7 +12,7 @@ API REST con Node.js, Express y MySQL/MariaDB para administrar `ciudades`, `clie
 ## Instalación
 
 ```powershell
-cd D:\Downloads\camacho\2026B\programacionV\proyectos\backend
+cd backend
 npm install
 Copy-Item .env.example .env
 npm run dev
@@ -22,13 +22,24 @@ La configuración inicial utiliza el usuario `root` sin contraseña, según el e
 
 ## Interfaz web
 
-El frontend está en `../front` y el mismo backend lo sirve como contenido estático. Con el servidor activo, abra:
+El frontend está en `../front` (carpeta hermana de `backend`) y el mismo backend lo sirve como contenido estático. Con el servidor activo, abra:
 
 ```text
-http://localhost:3000
+http://127.0.0.1:3000
 ```
 
-La tabla consulta `GET /api/v1/ciudades` mediante JavaScript e incluye búsqueda, ordenación, selector de registros y paginación.
+La página inicial enlaza a las cuatro tablas, que también pueden abrirse directamente:
+
+| Página | Datos que muestra |
+|---|---|
+| `/ciudades/` | Id, ciudad y país |
+| `/clientes/` | Id, ciudad, nombre, teléfono y segmento |
+| `/oficinas/` | Id y nombre |
+| `/proyectos/` | Id, cliente, oficina, proyecto, fechas y costo |
+
+Cada tabla consulta su recurso con `?limit=100` y avisa si existen más registros. Por ahora son de solo lectura, sin búsqueda ni paginación en pantalla.
+
+Si otro proyecto usa el puerto 3000 (por ejemplo StudentFlow), cambie `PORT` en `.env`.
 
 ## Endpoints disponibles
 
@@ -121,7 +132,7 @@ Proyecto:
 }
 ```
 
-En `POST /proyectos`, `fechaInicioProyecto` es opcional y MySQL utiliza la fecha actual. En `PUT` es obligatorio. La fecha final y el costo admiten `null`.
+En `POST /proyectos`, `fechaInicioProyecto` es opcional y MySQL utiliza la fecha actual. En `PUT` es obligatorio. La fecha final y el costo admiten `null`. La fecha final no puede ser anterior a la de inicio; en ese caso la API responde `422`. En `POST` sin fecha de inicio no se hace esa comparación, porque la fecha la asigna MySQL.
 
 ## Respuestas
 
@@ -158,7 +169,7 @@ npm test
 npm start
 ```
 
-Las pruebas recorren el CRUD completo de las cuatro tablas, comprueban relaciones y restricciones, y eliminan todos los datos temporales al finalizar.
+`test/proyectos.fechas.test.js` no necesita base de datos. Las demás pruebas recorren el CRUD completo de las cuatro tablas, comprueban relaciones y restricciones, y eliminan todos los datos temporales al finalizar.
 
 ## Estructura
 
@@ -172,6 +183,7 @@ src/services/        Casos de uso y reglas
 src/utils/           Respuestas y errores compartidos
 src/validators/      Validación de entrada
 scripts/             Validación de sintaxis
-test/                Pruebas de integración CRUD
+test/                Pruebas de integración CRUD y pruebas de fechas
+../front/            Interfaz web estática (HTML, CSS y JS)
 ../docs/              Diagrama existente de la base
 ```

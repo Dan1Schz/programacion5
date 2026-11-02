@@ -1,6 +1,7 @@
 import * as clientRepository from '../repositories/clientes.repository.js';
 import * as officeRepository from '../repositories/oficinas.repository.js';
 import * as projectRepository from '../repositories/proyectos.repository.js';
+import { assertDateOrder } from '../utils/fechas.js';
 import { HttpError } from '../utils/http-error.js';
 
 async function ensureRelations(project) {
@@ -27,18 +28,29 @@ export async function getProjectById(id) {
 }
 
 export async function createProject(project) {
+  assertDateOrder(project.startDate, project.endDate);
   await ensureRelations(project);
   return projectRepository.create(project);
 }
 
 export async function replaceProject(id, project) {
   await getProjectById(id);
+  assertDateOrder(project.startDate, project.endDate);
   await ensureRelations(project);
   return projectRepository.replace(id, project);
 }
 
 export async function updateProject(id, changes) {
-  await getProjectById(id);
+  const current = await getProjectById(id);
+
+  // Solo se compara si el cambio toca alguna de las dos fechas.
+  if (changes.startDate !== undefined || changes.endDate !== undefined) {
+    assertDateOrder(
+      changes.startDate !== undefined ? changes.startDate : current.fechaInicioProyecto,
+      changes.endDate !== undefined ? changes.endDate : current.fechaFinProyecto,
+    );
+  }
+
   await ensureRelations(changes);
   return projectRepository.patch(id, changes);
 }
